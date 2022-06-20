@@ -164,3 +164,4 @@ ALTER TABLE LOGS ADD PARTITION {generate name} VALUES LESS THAN ({choose date})
 1. Adding pagination for all needed functions. Not only for "get by level"
 2. Parsing log row using regular expression (not realised, not unnecessary)
 3. Add tests !!!
+4. 
