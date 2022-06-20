@@ -7,10 +7,13 @@ import com.example.logproject.dto.LevelDTO;
 import com.example.logproject.repo.LogRepository;
 import com.example.logproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -31,8 +34,10 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Log> getLogByLogLevel(String logLevel) {
-        return repo.findByLevel(logLevel);
+    public Page<Log> getLogByLogLevel(int page, int size, String logLevel) {
+        Sort sort = Sort.by("dateTime");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return repo.findByLevel(logLevel, pageable);
     }
 
     @Override
