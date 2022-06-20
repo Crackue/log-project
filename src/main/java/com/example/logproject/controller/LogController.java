@@ -6,6 +6,7 @@ import com.example.logproject.domain.Log;
 import com.example.logproject.mappingRequests.MappingRequests;
 import com.example.logproject.service.LogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,8 +33,8 @@ public class LogController {
     }
 
     @GetMapping(MappingRequests.GET_BY_LOGLEVEL)
-    public List<Log> getLogByLogLevel(@PathVariable String logLevel) {
-        return service.getLogByLogLevel(logLevel);
+    public Page<Log> getLogByLogLevel(@PathVariable int page, @PathVariable int size, @PathVariable String logLevel) {
+        return service.getLogByLogLevel(page, size, logLevel);
     }
 
     @GetMapping(MappingRequests.GET_BY_MESSAGE)
