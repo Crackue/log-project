@@ -1,17 +1,15 @@
 package com.example.logproject.service;
 
 import com.example.logproject.domain.Log;
-import com.example.logproject.dto.DateTimeDTO;
-import com.example.logproject.dto.FilePathDTO;
-import com.example.logproject.dto.LevelDTO;
+import com.example.logproject.dto.*;
 import com.example.logproject.repo.LogRepository;
 import com.example.logproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,26 +22,9 @@ import java.util.Scanner;
 public class LogServiceImpl implements LogService {
 
     @Autowired
+    LogFactory logFactory;
+    @Autowired
     LogRepository repo;
-
-    @Override
-    public List<Log> getLogByDateTime(DateTimeDTO dateTime) throws ParseException {
-        Date startDate = Utils.parseDate(dateTime.getStartDate());
-        Date endDate = Utils.parseDate(dateTime.getEndDate());
-        return repo.findAllByDateTimeBetween(startDate, endDate);
-    }
-
-    @Override
-    public Page<Log> getLogByLogLevel(int page, int size, String logLevel) {
-        Sort sort = Sort.by("dateTime");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return repo.findByLevel(logLevel, pageable);
-    }
-
-    @Override
-    public List<Log> getLogByMessage(String message) {
-        return repo.findByMessageLike("%" + message + "%");
-    }
 
     @Override
     public void readAndSaveLog(FilePathDTO filePath) throws IOException, ParseException {
@@ -86,5 +67,29 @@ public class LogServiceImpl implements LogService {
                 sc.close();
             }
         }
+    }
+
+    @Transactional
+    @Override
+    public List<Log> getLog(int page, int size, LogDTO logDTO) throws ParseException, IllegalArgumentException {
+        Sort sort = Sort.by("dateTime");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        logDTOValidation(logDTO);
+        return getLog(pageable, logDTO);
+    }
+
+    private void logDTOValidation(LogDTO logDTO) throws IllegalArgumentException{
+        if (logDTO.getStartDate() == null) {
+            throw new IllegalArgumentException("StartDate should not be null");
+        }
+        if (logDTO.getEndDate() == null) {
+            Date date = new Date();
+            logDTO.setEndDate(date.toString());
+        }
+    }
+
+    private List<Log> getLog(Pageable pageable, LogDTO logDTO) throws ParseException {
+        LogProvider logProvider = logFactory.getLogProvider(logDTO, pageable);
+        return logProvider.getLog();
     }
 }

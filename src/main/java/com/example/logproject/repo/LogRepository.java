@@ -4,13 +4,15 @@ import com.example.logproject.domain.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
-    public List<Log> findAllByDateTimeBetween(Date dateTimeStart, Date dateTimeEnd);
-    public Page<Log> findByLevel(String level, Pageable pageable);
-    public List<Log> findByMessageLike(String message);
+    @Query(value = "SELECT u FROM Log u WHERE u.dateTime BETWEEN ?1 and ?2")
+    public Stream<Log> readAllByDateTimeBetweenPaged(Date dateTimeStart, Date dateTimeEnd, Pageable pageable);
+
 }

@@ -9,146 +9,24 @@ username: sa \
 password:
 
 # API:
-1. Function readAndSave \
-Method: POST \
-Endpoint: http://localhost:8080/log/read_log \
-JSON: \
-{ \
-"path": “{path to the file}” \
-}
 
-2. Function get log by level \
-Method: GET \
-Endpoint: http://localhost:8080/log/get_by_loglevel/{page}/{size}/{LEVEL} \
-
-3. Function get log by message \
-Method: GET \
-Endpoint: http://localhost:8080/log/message/{message} \
-
-4. Function get log by date \
+Function get log by date \
 Method: get \
-Endpoint: http://localhost:8080/log/get_by_datetime \
+Endpoint: http://localhost:8080/log/get_log/{page}/{size}\
 JSON: \
 { \
-"startDate": "2021-01-26 19:20:34.298", \
-"endDate": "2021-01-28 22:12:43.405" \
+"level": "INFO", \
+"message": "restartedMain", \
+"startDate": "2021-01-19 12:19:58.694", \
+"endDate": "2021-01-25 18:20:10.397"\
 }
 
-# JSON API for postman import:
-{
-"info": {
-"_postman_id": "0ed336f4-9d70-45c2-a5aa-43ee061704d1",
-"name": "log",
-"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-"_exporter_id": "6048457"
-},
-"item": [
-{
-"name": "readAndSave",
-"request": {
-"method": "POST",
-"header": [],
-"body": {
-"mode": "raw",
-"raw": "{\n    \"path\": \"/Users/rayalekseev/Downloads/standard.log\" \n}",
-"options": {
-"raw": {
-"language": "json"
-}
-}
-},
-"url": {
-"raw": "http://localhost:8080/log/read_log",
-"protocol": "http",
-"host": [
-"localhost"
-],
-"port": "8080",
-"path": [
-"log",
-"read_log"
-]
-}
-},
-"response": []
-},
-{
-"name": "getByLogLevel",
-"request": {
-"method": "GET",
-"header": [],
-"url": {
-"raw": "http://localhost:8080/log/get_by_loglevel/2/3/INFO",
-"protocol": "http",
-"host": [
-"localhost"
-],
-"port": "8080",
-"path": [
-"log",
-"get_by_loglevel",
-"2",
-"3",
-"INFO"
-]
-}
-},
-"response": []
-},
-{
-"name": "getByMessage",
-"request": {
-"method": "GET",
-"header": [],
-"url": {
-"raw": "http://localhost:8080/log/message/restartedMain",
-"protocol": "http",
-"host": [
-"localhost"
-],
-"port": "8080",
-"path": [
-"log",
-"message",
-"restartedMain"
-]
-}
-},
-"response": []
-},
-{
-"name": "getByDateTimeBetween",
-"protocolProfileBehavior": {
-"disableBodyPruning": true
-},
-"request": {
-"method": "GET",
-"header": [],
-"body": {
-"mode": "raw",
-"raw": "{\n    \"startDate\": \"2021-01-26 19:20:34.298\",\n    \"endDate\": \"2021-01-28 22:12:43.405\"\n}",
-"options": {
-"raw": {
-"language": "json"
-}
-}
-},
-"url": {
-"raw": "http://localhost:8080/log/get_by_datetime",
-"protocol": "http",
-"host": [
-"localhost"
-],
-"port": "8080",
-"path": [
-"log",
-"get_by_datetime"
-]
-}
-},
-"response": []
-}
-]
+Combinations of searching was realized by payload contant. Example:\
+For searching by "date" and "level" payload will be: \
+{ \
+"level": "INFO", \
+"startDate": "2021-01-19 12:19:58.694", \
+"endDate": "2021-01-25 18:20:10.397"\
 }
 
 # Optimization improvement suggestions  
@@ -161,7 +39,6 @@ CREATE UNIQUE INDEX LOGS_CREATION_DATE_INDEX ON LOGS (TIMESTAMP ASC)
 ALTER TABLE LOGS ADD PARTITION {generate name} VALUES LESS THAN ({choose date})
 
 # Code improvements:
-1. Adding pagination for all needed functions. Not only for "get by level"
-2. Parsing log row using regular expression (not realised, not unnecessary)
-3. Add tests !!!
-4. 
+1. Parsing log row using regular expression (not realised, not unnecessary)
+2. Add tests !!!
+
