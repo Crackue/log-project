@@ -14,5 +14,11 @@ import java.util.stream.Stream;
 public interface LogRepository extends JpaRepository<Log, Long> {
     @Query(value = "SELECT u FROM Log u WHERE u.dateTime BETWEEN ?1 and ?2")
     public Stream<Log> readAllByDateTimeBetweenPaged(Date dateTimeStart, Date dateTimeEnd, Pageable pageable);
+    @Query(value = "SELECT u FROM Log u WHERE u.dateTime BETWEEN ?1 and ?2 and u.level = ?3")
+    public Page<Log> findByDateTimeLevel(Date dateTimeStart, Date dateTimeEnd, String level, Pageable pageable);
+
+    public Page<Log> findByDateTimeBetweenAndMessageContaining(Date dateTimeStart, Date dateTimeEnd, String message, Pageable pageable);
+
+    public Page<Log> findByDateTimeBetweenAndMessageContainingAndLevel(Date dateTimeStart, Date dateTimeEnd, String message, String level, Pageable pageable);
 
 }

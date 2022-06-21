@@ -1,7 +1,9 @@
 package com.example.logproject.service;
 
 import com.example.logproject.domain.Log;
+import com.example.logproject.dto.LogDTO;
 import com.example.logproject.repo.LogRepository;
+import com.example.logproject.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Data
 @NoArgsConstructor
@@ -29,9 +29,17 @@ public class DateTimeMessageLogProvider extends LogProvider{
     private Date endDate;
     private Pageable pageable;
     @Override
-    List<Log> getLog() {
-        try(Stream<Log> stream = repo.readAllByDateTimeBetweenPaged(startDate, endDate, pageable)) {
-            return stream.filter(log -> !log.getMessage().contains(message)).collect(Collectors.toList());
-        }
+    Iterable<Log> getLog() {
+        return repo.findByDateTimeBetweenAndMessageContaining(startDate, endDate, message, pageable);
+    }
+
+    @Override
+    void setLogDTO(LogDTO logDTO, Pageable pageable) throws ParseException {
+        Date startDate = Utils.parseDate(logDTO.getStartDate());
+        Date endDate = Utils.parseDate(logDTO.getEndDate());
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setMessage(logDTO.getMessage());
+        setPageable(pageable);
     }
 }

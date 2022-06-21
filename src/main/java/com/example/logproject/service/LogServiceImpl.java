@@ -5,6 +5,7 @@ import com.example.logproject.dto.*;
 import com.example.logproject.repo.LogRepository;
 import com.example.logproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -71,11 +72,11 @@ public class LogServiceImpl implements LogService {
 
     @Transactional
     @Override
-    public List<Log> getLog(int page, int size, LogDTO logDTO) throws ParseException, IllegalArgumentException {
+    public Page<Log> getLog(int page, int size, LogDTO logDTO, String map) throws ParseException, IllegalArgumentException {
         Sort sort = Sort.by("dateTime");
         Pageable pageable = PageRequest.of(page, size, sort);
         logDTOValidation(logDTO);
-        return getLog(pageable, logDTO);
+        return getLog(pageable, logDTO, map);
     }
 
     private void logDTOValidation(LogDTO logDTO) throws IllegalArgumentException{
@@ -88,8 +89,8 @@ public class LogServiceImpl implements LogService {
         }
     }
 
-    private List<Log> getLog(Pageable pageable, LogDTO logDTO) throws ParseException {
-        LogProvider logProvider = logFactory.getLogProvider(logDTO, pageable);
-        return logProvider.getLog();
+    private Page<Log> getLog(Pageable pageable, LogDTO logDTO, String map) throws ParseException {
+        LogProvider logProvider = logFactory.getLogProvider(logDTO, pageable, map);
+        return (Page<Log>) logProvider.getLog();
     }
 }
