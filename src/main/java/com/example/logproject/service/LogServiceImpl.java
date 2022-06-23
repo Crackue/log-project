@@ -72,25 +72,22 @@ public class LogServiceImpl implements LogService {
 
     @Transactional
     @Override
-    public Page<Log> getLog(int page, int size, LogDTO logDTO, String map) throws ParseException, IllegalArgumentException {
+    public List<Log> getLog(int page, int size, LogDTO logDTO, String map) throws ParseException, IllegalArgumentException {
         Sort sort = Sort.by("dateTime");
         Pageable pageable = PageRequest.of(page, size, sort);
-        logDTOValidation(logDTO);
         return getLog(pageable, logDTO, map);
     }
 
-    private void logDTOValidation(LogDTO logDTO) throws IllegalArgumentException{
-        if (logDTO.getStartDate() == null) {
-            throw new IllegalArgumentException("StartDate should not be null");
-        }
-        if (logDTO.getEndDate() == null) {
-            Date date = new Date();
-            logDTO.setEndDate(date.toString());
-        }
+    @Transactional
+    @Override
+    public List<Log> getLog(int page, int size, LogDTO_V2 logDTO, String map) throws ParseException, IllegalArgumentException {
+        Sort sort = Sort.by("dateTime");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return getLog(pageable, logDTO, map);
     }
 
-    private Page<Log> getLog(Pageable pageable, LogDTO logDTO, String map) throws ParseException {
-        LogProvider logProvider = logFactory.getLogProvider(logDTO, pageable, map);
-        return (Page<Log>) logProvider.getLog();
+    private List<Log> getLog(Pageable pageable, com.example.logproject.dto.Log log, String map) throws ParseException {
+        LogProvider logProvider = logFactory.getLogProvider(log, pageable, map);
+        return logProvider.getLog();
     }
 }

@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.util.List;
 
 abstract class LogProvider {
-    abstract Iterable<Log> getLog();
-    abstract void setLogDTO(LogDTO logDTO, Pageable pageable) throws ParseException;
+    abstract List<Log> getLog() throws ParseException;
+    abstract void setLogDTO(com.example.logproject.dto.Log logDTO, Pageable pageable) throws ParseException;
 
     public boolean isValid(LogDTO logDTO) {
         return true;

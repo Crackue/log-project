@@ -1,40 +1,33 @@
 package com.example.logproject.service;
 
+import com.example.logproject.dto.Log;
 import com.example.logproject.dto.LogDTO;
+import com.example.logproject.dto.LogDTO_V2;
 import com.example.logproject.mappingRequests.MappingRequests;
-import com.example.logproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.Date;
 
 @Component
 public class LogFactory {
 
     @Autowired
-    public DateTimeLogProvider dateTimeLogProvider;
-    @Autowired
-    public DateTimeLevelLogProvider dateTimeLevelLogProvider;
-    @Autowired
-    public DateTimeMessageLogProvider dateTimeMessageLogProvider;
-    @Autowired
-    public DateTimeLevelMessageLogProvider dateTimeLevelMessageLogProvider;
+    PredicateLogProviderV1 predicateLogProviderV1;
 
-    public LogProvider getLogProvider(LogDTO logDTO, Pageable pageable, String map) throws ParseException {
-        if (map.equals(MappingRequests.GET_LOG)) {
-            dateTimeLogProvider.setLogDTO(logDTO, pageable);
-            return dateTimeLogProvider;
-        } else if (map.equals(MappingRequests.GET_LOG_MESSAGE)) {
-            dateTimeMessageLogProvider.setLogDTO(logDTO, pageable);
-            return dateTimeMessageLogProvider;
-        } else if (map.equals(MappingRequests.GET_LOG_LEVEL)) {
-            dateTimeLevelLogProvider.setLogDTO(logDTO, pageable);
-            return dateTimeLevelLogProvider;
+    @Autowired
+    PredicateLogProviderV2 predicateLogProviderV2;
+
+    public LogProvider getLogProvider(Log log, Pageable pageable, String map) throws ParseException {
+        if (map.equals(MappingRequests.SEARCH_V1)) {
+            predicateLogProviderV1.setLogDTO(log, pageable);
+            return predicateLogProviderV1;
+        } else if (map.equals(MappingRequests.SEARCH_V2)){
+            predicateLogProviderV2.setLogDTO(log, pageable);
+            return predicateLogProviderV2;
         } else {
-            dateTimeLevelMessageLogProvider.setLogDTO(logDTO, pageable);
-            return dateTimeLevelMessageLogProvider;
+            return null;
         }
     }
 }

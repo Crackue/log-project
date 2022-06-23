@@ -3,6 +3,7 @@ package com.example.logproject.controller;
 import com.example.logproject.dto.FilePathDTO;
 import com.example.logproject.domain.Log;
 import com.example.logproject.dto.LogDTO;
+import com.example.logproject.dto.LogDTO_V2;
 import com.example.logproject.mappingRequests.MappingRequests;
 import com.example.logproject.service.LogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,37 +33,55 @@ public class LogController {
         }
     }
 
-    @GetMapping(MappingRequests.GET_LOG)
-    public Page<Log> getLogByDates(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+//    @GetMapping(MappingRequests.GET_LOG)
+//    public Page<Log> getLogByDates(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+//        try {
+//            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG);
+//        } catch (ParseException | IllegalArgumentException e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+//        }
+//    }
+//
+//    @GetMapping(MappingRequests.GET_LOG_LEVEL)
+//    public Page<Log> getLogByLevel(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+//        try {
+//            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_LEVEL);
+//        } catch (ParseException | IllegalArgumentException e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+//        }
+//    }
+//
+//    @GetMapping(MappingRequests.GET_LOG_MESSAGE)
+//    public Page<Log> getLogByMessage(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+//        try {
+//            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_MESSAGE);
+//        } catch (ParseException | IllegalArgumentException e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+//        }
+//    }
+//
+//    @GetMapping(MappingRequests.GET_LOG_LEVEL_MESSAGE)
+//    public Page<Log> getLogByLevelMessage(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+//        try {
+//            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_LEVEL_MESSAGE);
+//        } catch (ParseException | IllegalArgumentException e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+//        }
+//    }
+
+    @GetMapping(MappingRequests.SEARCH_V1)
+    public List<Log> getLogs_V1(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
         try {
-            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG);
+            return service.getLog(page, size, logDTO, MappingRequests.SEARCH_V1);
         } catch (ParseException | IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
-    @GetMapping(MappingRequests.GET_LOG_LEVEL)
-    public Page<Log> getLogByLevel(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+    @GetMapping(MappingRequests.SEARCH_V2)
+    public List<Log> getLogs_V2(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO_V2 logDTO) {
         try {
-            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_LEVEL);
-        } catch (ParseException | IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
-    @GetMapping(MappingRequests.GET_LOG_MESSAGE)
-    public Page<Log> getLogByMessage(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
-        try {
-            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_MESSAGE);
-        } catch (ParseException | IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
-    @GetMapping(MappingRequests.GET_LOG_LEVEL_MESSAGE)
-    public Page<Log> getLogByLevelMessage(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
-        try {
-            return service.getLog(page, size, logDTO, MappingRequests.GET_LOG_LEVEL_MESSAGE);
+            return service.getLog(page, size, logDTO, MappingRequests.SEARCH_V2);
         } catch (ParseException | IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }

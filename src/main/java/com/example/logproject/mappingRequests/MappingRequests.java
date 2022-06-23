@@ -7,5 +7,7 @@ public class MappingRequests {
     public static final String GET_LOG_MESSAGE = "/log/get_log_message/{page}/{size}";
     public static final String GET_LOG_LEVEL_MESSAGE = "/log/get_log_level_message/{page}/{size}";
     public static final String GET_LOG = "/log/get_log/{page}/{size}";
+    public static final String SEARCH_V1 = "/log/search/{page}/{size}";
 
+    public static final String SEARCH_V2 = "/log/search/{page}/{size}";
 }
