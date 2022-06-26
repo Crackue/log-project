@@ -27,21 +27,6 @@ class LogProjectApplicationTests {
 
 	@Test
 	void contextLoads() {
-		LogDTO logDTO = new LogDTO();
-		logDTO.setLevel("INFO");
-		logDTO.setMessage("BLABLABLA");
-
-		ObjectMapper oMapper = new ObjectMapper();
-		Map<String, String> log = oMapper.convertValue(logDTO, Map.class);
-
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Log> cq = cb.createQuery(Log.class);
-		Root<Log> log_ = cq.from(Log.class);
-		Class clazz = log_.get("dateTime").getJavaType();
-		cq.select(log_);
-		log.get("dateTime");
-
-		Assert.isTrue(true, "");
 	}
 
 }

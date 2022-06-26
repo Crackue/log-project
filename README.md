@@ -10,44 +10,22 @@ password:
 
 # API:
 
-Function get log by date \
+Function search v1\
 Method: get \
-Endpoint: http://localhost:8080/log/get_log/{page}/{size}\
+Endpoint: http://localhost:8080/log/search_v1/{page}/{size}\
 JSON: \
 { \
 "startDate": "2021-01-19 12:19:58.694", \
 "endDate": "2021-01-25 18:20:10.397"\
 }
 
-Function get log by level \
+Function search v2\
 Method: get \
-Endpoint: http://localhost:8080/log/get_log_level/{page}/{size}\
+Endpoint: http://localhost:8080/log/search_v2/{page}/{size}\
 JSON: \
 { \
-"level": "INFO", \
-"startDate": "2021-01-19 12:19:58.694", \
-"endDate": "2021-01-25 18:20:10.397"\
-}
-
-Function get log by message \
-Method: get \
-Endpoint: http://localhost:8080/log/get_log_message/{page}/{size}\
-JSON: \
-{ \
-"message": "restartedMain", \
-"startDate": "2021-01-19 12:19:58.694", \
-"endDate": "2021-01-25 18:20:10.397"\
-}
-
-Function get log by level and message \
-Method: get \
-Endpoint: http://localhost:8080/log/get_log_level_message/{page}/{size}\
-JSON: \
-{ \
-"level": "INFO", \
-"message": "restartedMain", \
-"startDate": "2021-01-19 12:19:58.694", \
-"endDate": "2021-01-25 18:20:10.397"\
+"keywords": ["2021-01-19 12:19:58.694", 2021-01-25 18:20:10.397], \
+"columnNames": ["datetime"]\
 }
 
 # Optimization improvement suggestions  

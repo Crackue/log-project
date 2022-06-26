@@ -5,17 +5,14 @@ import com.example.logproject.dto.*;
 import com.example.logproject.repo.LogRepository;
 import com.example.logproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -72,22 +69,20 @@ public class LogServiceImpl implements LogService {
 
     @Transactional
     @Override
-    public List<Log> getLog(int page, int size, LogDTO logDTO, String map) throws ParseException, IllegalArgumentException {
-        Sort sort = Sort.by("dateTime");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return getLog(pageable, logDTO, map);
+    public List<Log> getLog(int page, int size, LogDTO logDTO) throws ParseException, IllegalArgumentException {
+        Pageable pageable = PageRequest.of(page, size);
+        return getLog(pageable, logDTO);
     }
 
     @Transactional
     @Override
-    public List<Log> getLog(int page, int size, LogDTO_V2 logDTO, String map) throws ParseException, IllegalArgumentException {
-        Sort sort = Sort.by("dateTime");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return getLog(pageable, logDTO, map);
+    public List<Log> getLog(int page, int size, LogDTO_V2 logDTO) throws ParseException, IllegalArgumentException {
+        Pageable pageable = PageRequest.of(page, size);
+        return getLog(pageable, logDTO);
     }
 
-    private List<Log> getLog(Pageable pageable, com.example.logproject.dto.Log log, String map) throws ParseException {
-        LogProvider logProvider = logFactory.getLogProvider(log, pageable, map);
+    private List<Log> getLog(Pageable pageable, com.example.logproject.dto.Log log) throws ParseException {
+        LogProvider logProvider = logFactory.getLogProvider(log, pageable);
         return logProvider.getLog();
     }
 }
