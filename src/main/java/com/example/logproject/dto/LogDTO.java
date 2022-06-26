@@ -6,6 +6,6 @@ import lombok.Data;
 public class LogDTO implements Log{
     private String message;
     private String level;
-    private String startDate;
-    private String endDate;
+    private String startDatetime;
+    private String endDatetime;
 }

@@ -4,7 +4,9 @@ import com.example.logproject.domain.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Utils {
 
@@ -23,12 +25,13 @@ public class Utils {
         log.setLevel(findLevel(arr));
         String dt = findDateTime(arr);
         Date date = parseDate(dt);
-        log.setDateTime(date);
+        log.setDatetime(date);
         log.setMessage(findMessage(line));
         return log;
     }
 
     public static Date parseDate(String dt) throws ParseException {
+        sdf.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
         return sdf.parse(dt);
     }
 
@@ -43,5 +46,9 @@ public class Utils {
 
     private static String findLevel(String[] arr) {
          return arr[0];
+    }
+
+    public static String getRootKey(String key) {
+        return key.replace("start", "").replace("end", "").toLowerCase();
     }
 }

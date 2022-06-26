@@ -15,7 +15,7 @@ public class Log {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "datetime")
-    Date dateTime;
+    Date datetime;
 
     @Column(name = "level")
     String level;

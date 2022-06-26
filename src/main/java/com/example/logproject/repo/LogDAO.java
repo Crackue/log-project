@@ -28,12 +28,13 @@ public class LogDAO {
         List<Predicate> predicates = new ArrayList<>();
         Set<String> keys = logDTO.keySet();
         for (String key: keys) {
-            Predicate pr = createPredicate(key);
+            PredicateCreator creator = PredicateCreatorFactory.getCreator(key, log);
+            Predicate pr = creator.createPredicate(logDTO, cb);
             if (pr != null)
                 predicates.add(pr);
         }
 
-        cq.where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
+        cq.where(predicates.toArray(new Predicate[predicates.size()]));
         TypedQuery<Log> query = em.createQuery(cq);
         query.setFirstResult(page);
         query.setMaxResults(size);
@@ -55,30 +56,5 @@ public class LogDAO {
         query.setFirstResult(page);
         query.setMaxResults(size);
         return query.getResultList();
-    }
-
-    private Predicate createPredicate(String key) {
-
-        //TODO Process for creation predicate according to JSON field
-
-//        Object value = null;
-//        String type = log.get(key).getJavaType().getName();
-//            if (type.equals("Date")) {
-//                value = Utils.parseDate(logDTO.get(key));
-//                if (key.equals("startDate"))
-//                    startDate = (Date) value;
-//                else if (key.equals("endDate"))
-//                    endDate = (Date) value;
-//            } else if (type.equals("Integer")) {
-//                value = Integer.valueOf(key);
-//            } else {
-//                value = key;
-//            }
-        // Predicate pr = cb.greaterThan(log.get(key).as(Date.class), (Date) value);
-        // Predicate pr = cb.lessThan(log.get(key).as(Date.class), (Date) value);
-        // Predicate between_date = cb.between(log.get("dateTime"), startDate, endDate);
-        // Predicate pr = cb.equal(log.get(key), value);
-
-        return null;
     }
 }
