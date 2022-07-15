@@ -17,7 +17,7 @@ public class LogProjectApplication {
 	public H2ConnectionFactory connectionFactory() {
 		return new H2ConnectionFactory(
 				H2ConnectionConfiguration.builder()
-						.url("mem:testdb;DB_CLOSE_DELAY=-1;TRACE_LEVEL_FILE=4")
+						.url("r2dbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE")
 						.username("sa")
 						.build());
 	}
