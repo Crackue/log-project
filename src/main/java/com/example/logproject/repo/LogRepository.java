@@ -15,12 +15,8 @@ import java.util.stream.Stream;
 @Repository
 public interface LogRepository extends ReactiveCrudRepository<Log, Long> {
     @Query(value = "SELECT u FROM Log u WHERE u.datetime BETWEEN ?1 and ?2")
-    public Flux<Log> readAllByDatetimeBetweenPaged(Date dateTimeStart, Date dateTimeEnd, Pageable pageable);
+    public Flux<Log> findAllByDatetimeBetween(Date dateTimeStart, Date dateTimeEnd);
     @Query(value = "SELECT u FROM Log u WHERE u.datetime BETWEEN ?1 and ?2 and u.level = ?3")
-    public Flux<Log> findByDatetimeLevel(Date dateTimeStart, Date dateTimeEnd, String level, Pageable pageable);
-
-    public Flux<Log> findByDatetimeBetweenAndMessageContaining(Date dateTimeStart, Date dateTimeEnd, String message, Pageable pageable);
-
-    public Flux<Log> findByDatetimeBetweenAndMessageContainingAndLevel(Date dateTimeStart, Date dateTimeEnd, String message, String level, Pageable pageable);
+    public Flux<Log> findByDatetimeLevel(Date dateTimeStart, Date dateTimeEnd, String level);
 
 }

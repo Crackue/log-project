@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
-
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -31,6 +33,11 @@ class LogProjectApplicationTests {
 	@Test
 	public void test1() {
 		insertPlayers();
+		Date dateTimeStart = new Date();
+		Date dateTimeEnd = new Date();
+		Flux<Log> logs = logRepository.findAllByDatetimeBetween(dateTimeStart, dateTimeEnd);
+		logs.as(StepVerifier::create)
+				.verifyComplete();
 	}
 
 	private void insertPlayers() {
