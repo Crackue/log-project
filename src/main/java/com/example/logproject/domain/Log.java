@@ -1,25 +1,32 @@
 package com.example.logproject.domain;
 
-import lombok.Data;
-import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.util.Date;
 
 
-@Data
-@Entity
-@Table(name = "logs")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table
 public class Log {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "datetime")
+    @Column
     Date datetime;
 
-    @Column(name = "level")
+    @Column
     String level;
 
-    @Column(name = "message", length = 2048)
+    @Column
     String message;
 }
