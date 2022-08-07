@@ -4,7 +4,10 @@ import com.example.logproject.domain.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -12,6 +15,7 @@ public class Utils {
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
     public static SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+    public static  DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     public static Log parseLog(String line) throws ParseException {
         Log log = new Log();
@@ -24,7 +28,7 @@ public class Utils {
         findLevel(arr);
         log.setLevel(findLevel(arr));
         String dt = findDateTime(arr);
-        Date date = parseDate(dt);
+        LocalDateTime date = parseDateToLocalDateTime(dt);
         log.setDatetime(date);
         log.setMessage(findMessage(line));
         return log;
@@ -32,7 +36,12 @@ public class Utils {
 
     public static Date parseDate(String dt) throws ParseException {
         sdf.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
+        LocalDateTime.parse(dt, formatter);
         return sdf.parse(dt);
+    }
+
+    public static LocalDateTime parseDateToLocalDateTime(String dt) {
+        return LocalDateTime.parse(dt, formatter);
     }
 
     private static String findMessage(String line) {

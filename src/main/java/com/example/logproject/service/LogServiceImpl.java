@@ -9,10 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,6 +30,8 @@ public class LogServiceImpl implements LogService {
         FileInputStream inputStream = null;
         Scanner sc = null;
         StringBuilder sb = new StringBuilder();
+        List<Log> logs = new ArrayList<>();
+
         try {
             inputStream = new FileInputStream(filePath.getPath());
             sc = new Scanner(inputStream, "UTF-8");
@@ -47,12 +50,14 @@ public class LogServiceImpl implements LogService {
                         isLevel = LevelDTO.getAllLevels().stream().anyMatch(line::startsWith);
                     }
                     Log log = Utils.parseLog(sb.toString());
-                    repo.save(log);
+                    repo.save(log).subscribe();
+                    logs.add(log);
                     sb = null;
 
                 }
                 Log log = Utils.parseLog(line);
-                repo.save(log);
+                repo.save(log).subscribe();
+                logs.add(log);
             }
             if (sc.ioException() != null) {
                 throw sc.ioException();
@@ -69,19 +74,19 @@ public class LogServiceImpl implements LogService {
 
     @Transactional
     @Override
-    public List<Log> getLog(int page, int size, LogDTO logDTO) throws ParseException, IllegalArgumentException {
+    public Flux<Log> getLog(int page, int size, LogDTO_V1 logDTO) throws ParseException, IllegalArgumentException {
         Pageable pageable = PageRequest.of(page, size);
         return getLog(pageable, logDTO);
     }
 
     @Transactional
     @Override
-    public List<Log> getLog(int page, int size, LogDTO_V2 logDTO) throws ParseException, IllegalArgumentException {
+    public Flux<Log> getLog(int page, int size, LogDTO_V2 logDTO) throws ParseException, IllegalArgumentException {
         Pageable pageable = PageRequest.of(page, size);
         return getLog(pageable, logDTO);
     }
 
-    private List<Log> getLog(Pageable pageable, com.example.logproject.dto.Log log) throws ParseException {
+    private Flux<Log> getLog(Pageable pageable, LogDTO log) throws ParseException {
         LogProvider logProvider = logFactory.getLogProvider(log, pageable);
         return logProvider.getLog();
     }

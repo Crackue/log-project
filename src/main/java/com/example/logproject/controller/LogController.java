@@ -2,7 +2,7 @@ package com.example.logproject.controller;
 
 import com.example.logproject.dto.FilePathDTO;
 import com.example.logproject.domain.Log;
-import com.example.logproject.dto.LogDTO;
+import com.example.logproject.dto.LogDTO_V1;
 import com.example.logproject.dto.LogDTO_V2;
 import com.example.logproject.mappingRequests.MappingRequests;
 import com.example.logproject.service.LogServiceImpl;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class LogController {
     }
 
     @GetMapping(MappingRequests.SEARCH_V1)
-    public List<Log> getLogs_V1(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO logDTO) {
+    public Flux<Log> getLogs_V1(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO_V1 logDTO) {
         try {
             return service.getLog(page, size, logDTO);
         } catch (ParseException | IllegalArgumentException e) {
@@ -42,7 +43,7 @@ public class LogController {
     }
 
     @GetMapping(MappingRequests.SEARCH_V2)
-    public List<Log> getLogs_V2(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO_V2 logDTO) {
+    public Flux<Log> getLogs_V2(@PathVariable int page, @PathVariable int size, @RequestBody LogDTO_V2 logDTO) {
         try {
             return service.getLog(page, size, logDTO);
         } catch (ParseException | IllegalArgumentException e) {

@@ -1,14 +1,19 @@
 package com.example.logproject.repo;
 
 import com.example.logproject.domain.Log;
-import com.example.logproject.dto.LogDTO;
 import com.example.logproject.utils.Utils;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 import java.text.ParseException;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -19,45 +24,38 @@ public class LogDAO {
     @Autowired
     LogRepository logRepository;
 
-    public List<Log> findLogsV1(Map<String, String> logDTO, int page, int size) throws ParseException {
+    public Flux<Log> findLogsV1(Map<String, String> logDTO, int page, int size) throws ParseException {
 
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Log> cq = cb.createQuery(Log.class);
-//        Root<Log> log = cq.from(Log.class);
-//        cq.select(log);
-//
-//        List<Predicate> predicates = new ArrayList<>();
-//        Set<String> keys = logDTO.keySet();
-//        for (String key: keys) {
-//            PredicateCreator creator = PredicateCreatorFactory.getCreator(key, log);
-//            Predicate pr = creator.createPredicate(logDTO, cb);
-//            if (pr != null)
-//                predicates.add(pr);
-//        }
-//
-//        cq.where(predicates.toArray(new Predicate[predicates.size()]));
-//        TypedQuery<Log> query = em.createQuery(cq);
-//        query.setFirstResult(page);
-//        query.setMaxResults(size);
-//        return query.getResultList();
-        return null;
+        return logRepository.findAll()
+                .filter(log -> filterBetweenDatetime(logDTO, log))
+                .filter(log -> filterMessage(logDTO, log))
+                .filter(log -> filterLevel(logDTO, log))
+                .skip(page * size)
+                .take(size);
     }
 
-    public List<Log> findLogsV2(Map<String, List<String>> logDTO, int page, int size) throws ParseException {
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Log> cq = cb.createQuery(Log.class);
-//        Root<Log> log = cq.from(Log.class);
-//        cq.select(log);
-//
-//        List<Predicate> predicates = new ArrayList<>();
-//
-//        //TODO Process for creation predicate according to JSON
-//
-//        cq.where(cb.or(predicates.toArray(new Predicate[predicates.size()])));
-//        TypedQuery<Log> query = em.createQuery(cq);
-//        query.setFirstResult(page);
-//        query.setMaxResults(size);
-//        return query.getResultList();
+    private boolean filterBetweenDatetime(Map<String, String> logDTO, Log log) {
+        String startDatetime = logDTO.get("startDatetime");
+        LocalDateTime dateTimeStart = Utils.parseDateToLocalDateTime(startDatetime);
+        String endDatetime = logDTO.get("endDatetime");
+        LocalDateTime dateTimeEnd = Utils.parseDateToLocalDateTime(endDatetime);
+        boolean is = log.getDatetime().isAfter(dateTimeStart) && log.getDatetime().isBefore(dateTimeEnd);
+        return (log.getDatetime().isAfter(dateTimeStart) || log.getDatetime().equals(dateTimeStart)) &&
+                (log.getDatetime().isBefore(dateTimeEnd) || log.getDatetime().equals(dateTimeEnd));
+    }
+
+    private boolean filterMessage(Map<String, String> logDTO, Log log) {
+        String message = logDTO.get("message");
+        return message != null && !message.isEmpty() ? log.getMessage().contains(message) : true;
+    }
+
+    private boolean filterLevel(Map<String, String> logDTO, Log log) {
+        String level = logDTO.get("level");
+        return level != null && !level.isEmpty() ? log.getLevel().equals(level) : true;
+    }
+
+    public Flux<Log> findLogsV2(Map<String, List<String>> logDTO, int page, int size) throws ParseException {
+        //TODO
         return null;
     }
 }
